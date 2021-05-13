@@ -13,6 +13,7 @@
 #include <fstream>
 
 #include <dtl/thread.hpp>
+#include <thread>
 
 #ifdef __linux__
 #define checkLinux(x) (x)

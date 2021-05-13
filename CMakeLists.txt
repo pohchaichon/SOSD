@@ -6,7 +6,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 if (${LINUX})
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -Wall -Wfatal-errors -march=native -fopenmp")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}  -ffast-math -Wall -Wfatal-errors -march=native -fopenmp -faligned-new -mtune=native")
 else ()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ffast-math -Wall -Wfatal-errors -march=native")
 endif ()
@@ -56,13 +56,22 @@ if (${LINUX})
     )
 endif ()
 
+set(JEMALLOC_DIR "/usr/local/lib")
+set(MKL_LINK_DIRECTORY "/opt/intel/mkl/lib/intel64")
+set(MKL_INCLUDE_DIRECTORY "/opt/intel/mkl/include")
+link_directories(${JEMALLOC_DIR})
+link_directories(${MKL_LINK_DIRECTORY})
+link_libraries(jemalloc)
+
 add_executable(benchmark benchmark.cc ${SOURCE_FILES} ${RMI_SOURCES} ${BENCH_SOURCES})
 target_include_directories(benchmark
         PRIVATE "competitors/stx-btree-0.9/include"
         PRIVATE "competitors/FST/include"
         PRIVATE "competitors/PGM-index/include"
         PRIVATE "competitors/rs/include"
-        PRIVATE "fast64")
+        PRIVATE "fast64"
+				PRIVATE "competitors/xindex/XIndex-R"
+				PRIVATE ${MKL_INCLUDE_DIRECTORY})
 add_dependencies(benchmark libfast64)
 
 if (${LINUX})
@@ -71,8 +80,12 @@ if (${LINUX})
     add_dependencies(benchmark libwh)
 endif ()
 
+target_compile_definitions(benchmark PRIVATE NDEBUGGING)
+
 target_link_libraries(benchmark
         PRIVATE ${CMAKE_SOURCE_DIR}/fast64/target/release/libfast64.a
         PRIVATE tsl::robin_map
         PRIVATE Threads::Threads dtl
-        PRIVATE dl)
+        PRIVATE dl
+				PRIVATE mkl_rt
+				PRIVATE -lpthread)

@@ -11,6 +11,7 @@
 #include "benchmarks/benchmark_alex.h"
 #include "benchmarks/benchmark_fst.h"
 #include "benchmarks/benchmark_wormhole.h"
+#include "benchmarks/benchmark_xindex.h"
 #include "util.h"
 #include "utils/cxxopts.hpp"
 #include "config.h"
@@ -68,6 +69,7 @@ void execute_64_bit(Benchmark benchmark, bool pareto,
   check_only("IBTree", benchmark_64_ibtree(benchmark, pareto));
   check_only("FAST", benchmark_64_fast(benchmark, pareto));
   check_only("ALEX", benchmark_64_alex(benchmark, pareto));
+	check_only("XIndex", benchmark_64_xindex(benchmark, pareto));
 #ifndef __APPLE__
   #ifndef DISABLE_FST
   check_only("FST", benchmark_64_fst(benchmark, pareto));

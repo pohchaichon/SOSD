@@ -19,3 +19,6 @@
 [submodule "competitors/ALEX"]
 	path = competitors/ALEX
 	url = https://github.com/microsoft/ALEX.git
+[submodule "competitors/xindex"]
+	path = competitors/xindex
+	url = https://ipads.se.sjtu.edu.cn:1312/opensource/xindex.git
